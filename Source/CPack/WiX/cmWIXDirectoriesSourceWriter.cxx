@@ -9,15 +9,17 @@ cmWIXDirectoriesSourceWriter::cmWIXDirectoriesSourceWriter(
 }
 
 void cmWIXDirectoriesSourceWriter::EmitStartMenuFolder(
-  std::string const& startMenuFolder)
+  std::string const& startMenuFolder, bool skip)
 {
   BeginElement("Directory");
   AddAttribute("Id", "ProgramMenuFolder");
 
-  BeginElement("Directory");
-  AddAttribute("Id", "PROGRAM_MENU_FOLDER");
-  AddAttribute("Name", startMenuFolder);
-  EndElement("Directory");
+  if (!skip) {
+    BeginElement("Directory");
+    AddAttribute("Id", "PROGRAM_MENU_FOLDER");
+    AddAttribute("Name", startMenuFolder);
+    EndElement("Directory");
+  }
 
   EndElement("Directory");
 }

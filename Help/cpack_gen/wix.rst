@@ -95,6 +95,12 @@ Windows using WiX.
 
  If this variable is not set, it will be initialized with CPACK_PACKAGE_NAME
 
+.. variable:: CPACK_WIX_SKIP_PROGRAM_MENU_FOLDER
+
+ If this variable is set to true, the start menu folder and uninstall
+ shortcut are not created and all application shortcuts are created directly
+ in the start menu.
+
 .. variable:: CPACK_WIX_CULTURES
 
  Language(s) of the installer

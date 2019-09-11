@@ -18,7 +18,7 @@ public:
   cmWIXDirectoriesSourceWriter(cmCPackLog* logger, std::string const& filename,
                                GuidType componentGuidType);
 
-  void EmitStartMenuFolder(std::string const& startMenuFolder);
+  void EmitStartMenuFolder(std::string const& startMenuFolder, bool skip);
 
   void EmitDesktopFolder();
 

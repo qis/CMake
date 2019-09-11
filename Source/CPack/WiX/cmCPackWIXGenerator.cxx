@@ -538,8 +538,9 @@ bool cmCPackWIXGenerator::CreateWiXSourceFiles()
   }
 
   bool emitUninstallShortcut =
+    cmIsOff(GetOption("CPACK_WIX_SKIP_PROGRAM_MENU_FOLDER")) &&
     emittedShortcutTypes.find(cmWIXShortcuts::START_MENU) !=
-    emittedShortcutTypes.end();
+      emittedShortcutTypes.end();
 
   if (!CreateShortcuts(std::string(), "ProductFeature", globalShortcuts,
                        emitUninstallShortcut, fileDefinitions,
@@ -555,7 +556,8 @@ bool cmCPackWIXGenerator::CreateWiXSourceFiles()
   if (emittedShortcutTypes.find(cmWIXShortcuts::START_MENU) !=
       emittedShortcutTypes.end()) {
     directoryDefinitions.EmitStartMenuFolder(
-      GetOption("CPACK_WIX_PROGRAM_MENU_FOLDER"));
+      GetOption("CPACK_WIX_PROGRAM_MENU_FOLDER"),
+      cmIsOn(GetOption("CPACK_WIX_SKIP_PROGRAM_MENU_FOLDER")));
   }
 
   if (emittedShortcutTypes.find(cmWIXShortcuts::DESKTOP) !=
@@ -734,7 +736,11 @@ bool cmCPackWIXGenerator::CreateShortcutsOfSpecificType(
   std::string directoryId;
   switch (type) {
     case cmWIXShortcuts::START_MENU:
-      directoryId = "PROGRAM_MENU_FOLDER";
+      if (cmIsOn(GetOption("CPACK_WIX_SKIP_PROGRAM_MENU_FOLDER"))) {
+        directoryId = "ProgramMenuFolder";
+      } else {
+        directoryId = "PROGRAM_MENU_FOLDER";
+      }
       break;
     case cmWIXShortcuts::DESKTOP:
       directoryId = "DesktopFolder";
@@ -788,7 +794,8 @@ bool cmCPackWIXGenerator::CreateShortcutsOfSpecificType(
   shortcuts.EmitShortcuts(type, registryKey, cpackComponentName,
                           fileDefinitions);
 
-  if (type == cmWIXShortcuts::START_MENU) {
+  if (type == cmWIXShortcuts::START_MENU &&
+      cmIsOff(GetOption("CPACK_WIX_SKIP_PROGRAM_MENU_FOLDER"))) {
     fileDefinitions.EmitRemoveFolder("CM_REMOVE_PROGRAM_MENU_FOLDER" +
                                      idSuffix);
   }
